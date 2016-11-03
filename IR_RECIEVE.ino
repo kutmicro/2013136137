@@ -30,6 +30,16 @@
 // we will store up to 100 pulse pairs (this is -a lot-)
 uint16_t pulses[100][2];  // pair is high and low pulse 
 uint8_t currentpulse = 0; // index for pulses we're storing
+
+void printpulses(void) {
+  Serial.println("\n\r\n\rReceived: \n\rOFF \tON");
+  for (uint8_t i = 0; i < currentpulse; i++) {
+    Serial.print(pulses[i][0] * RESOLUTION, DEC);
+    Serial.print(" usec, ");
+    Serial.print(pulses[i][1] * RESOLUTION, DEC);
+    Serial.println(" usec");
+  }
+}
  
 void setup(void) {
   Serial.begin(9600);
@@ -76,14 +86,4 @@ void loop(void) {
  
   // we read one high-low pulse successfully, continue!
   currentpulse++;
-}
- 
-void printpulses(void) {
-  Serial.println("\n\r\n\rReceived: \n\rOFF \tON");
-  for (uint8_t i = 0; i < currentpulse; i++) {
-    Serial.print(pulses[i][0] * RESOLUTION, DEC);
-    Serial.print(" usec, ");
-    Serial.print(pulses[i][1] * RESOLUTION, DEC);
-    Serial.println(" usec");
-  }
 }

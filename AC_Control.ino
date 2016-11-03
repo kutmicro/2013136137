@@ -12,6 +12,12 @@ int IRledPin =  13;    // IR LED connected to digital pin 13
 float powervoltage=5;//define the power supply voltage.
 int On = 0; //Initial state of A/C should be OFF
 
+void pulseIR(long microsecs);
+void TurnOn();
+void TurnOff();
+void TempUp();
+void TempDown();
+
 void setup() {
   // initialize serial communication at 9600 bits per second:
   pinMode(IRledPin, OUTPUT);   
