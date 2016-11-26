@@ -1,23 +1,16 @@
-#define POT_PIN A0 
-#define LED_PIN 13 
+#define PIN A0
 
-void setup()
-{
-  Serial.begin(9600);  //시리얼 통신속도 설정
-  pinMode(LED_PIN, OUTPUT); 
+void setup() {
+  
+  Serial.begin(9600);   //시리얼 통신속도 설정
+  
 }
-void loop()
-{
-  int val = 0;
-  val = analogRead(POT_PIN); 
+void loop() {
+  
+  int val = analogRead(PIN); // 센서값 읽어옴
 
-  Serial.println(val); // 조도센서 값 출력
+  Serial.println(val);  // 조도센서 값(0 ~ 1023) 출력
 
-  //조도센서 값이 100미만이면 LED를 켠다
-  if(val < 100) {
-    digitalWrite(LED_PIN, HIGH);
-  } else {
-    digitalWrite(LED_PIN, LOW);
-  }
-  delay(500);
+  delay(300);            // 측정 간격 설정 (1000 = 1초)
+  
 }
