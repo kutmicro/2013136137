@@ -107,12 +107,14 @@ void loop() {
     lcd.setCursor(0,0); // 커서 설정
     lcd.print("  Temp : ");
     lcd.print(temperature,1);
+    lcd.print("   ");
 
     Serial.print("Current ambient light level is : ");
     Serial.println(lightValue);
     lcd.setCursor(0,1); // 커서 설정
     lcd.print(" Light : ");
     lcd.print(lightValue);
+    lcd.print("    ");
 
     delay(3000); // 3초 대기
 
@@ -212,7 +214,7 @@ void loop() {
       Serial.print("It is too dark to turn on AC right now. Current ambient light level is:");
       Serial.println(lightValue);
       lcd.setCursor(0,0); // 커서 설정
-      lcd.print("AC is Off");
+      lcd.print("AC is Off       ");
       lcd.setCursor(0,1); // 커서 설정
       lcd.print("Early Evening   ");
       if(On == 1) {
@@ -227,7 +229,7 @@ void loop() {
       Serial.print("It is too dark to turn on AC right now. Current ambient light level is:");
       Serial.println(lightValue);
       lcd.setCursor(0,0); // 커서 설정
-      lcd.print("AC is Off");
+      lcd.print("AC is Off       ");
       lcd.setCursor(0,1); // 커서 설정
       lcd.print("Evening         ");
       if(On == 1) {
