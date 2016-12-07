@@ -30,7 +30,7 @@ void IRsend(int IRsignal[]); // 적외선 송신
 void setup() {
   Serial.begin(9600); // 시리얼 통신속도 설정
   pinMode(IRledPin, OUTPUT);
-  IRsend(TurnOff);
+//  IRsend(TurnOff);
 
   lcd.begin(16, 2); // LCD 크기 설정
   lcd.setCursor(14,0);
@@ -127,9 +127,11 @@ void loop() {
         lcd.setCursor(0,0); // 커서 설정
         lcd.print("  Temp : ");
         lcd.print(temperature,1);
+        lcd.print("   ");
         lcd.setCursor(0,1); // 커서 설정
         lcd.print(" Light : ");
         lcd.print(lightValue);
+        lcd.print("    ");
 
         if (lightValue > 360){ // 낮 → 초저녁
           break;
@@ -146,10 +148,9 @@ void loop() {
         else if (temperature < MIN_Temp){
           Serial.print("Too cold! The current temperature degree is:");
           Serial.println(temperature,1);
-          IRsend(TurnOff); // 전원 Off
-          On = 0;
+//          IRsend(TurnOff); // 전원 Off
           lcd.setCursor(0,1); // 커서 설정
-          lcd.print("Turn Off AC");
+          lcd.print("Turn Off AC     ");
           delay(900000); // 15분 후에 온도, 조도 다시 측정
         }
         else {
@@ -168,9 +169,11 @@ void loop() {
         lcd.setCursor(0,0); // 커서 설정
         lcd.print("  Temp : ");
         lcd.print(temperature,1);
+        lcd.print("   ");
         lcd.setCursor(0,1); // 커서 설정
         lcd.print(" Light : ");
         lcd.print(lightValue);
+        lcd.print("    ");
 
         if (lightValue > 360){ // 낮 → 초저녁
           break;
@@ -179,14 +182,14 @@ void loop() {
           Serial.println("Too cold! Increasing Temperature");
           IRsend(TempUp);
           lcd.setCursor(0,1); // 커서 설정
-          lcd.print("Cold!! Temp Up");
+          lcd.print("Cold!! Temp Up  ");
           delay(300000); // 5분 대기
         }
         else if (temperature > MAX_Temp){
           Serial.println("Hoooot! Decreasing Temperature");
           IRsend(TempDown);
           lcd.setCursor(0,1); // 커서 설정
-          lcd.print("Hot!! Temp Down");
+          lcd.print("Hot!! Temp Down ");
           delay(300000); // 5분 대기
         }
         else if (temperature < MIN_Temp){
@@ -211,10 +214,11 @@ void loop() {
       lcd.setCursor(0,0); // 커서 설정
       lcd.print("AC is Off");
       lcd.setCursor(0,1); // 커서 설정
-      lcd.print("Early Evening");
-      
-      IRsend(TurnOff); // 전원 Off
-      On = 0;
+      lcd.print("Early Evening   ");
+      if(On == 1) {
+        IRsend(TurnOff); // 전원 Off
+        On = 0;
+      }
       delay(900000); // 15분 후에 조도 다시 측정
       lightValue = analogRead(LightPin);
     }
@@ -225,10 +229,11 @@ void loop() {
       lcd.setCursor(0,0); // 커서 설정
       lcd.print("AC is Off");
       lcd.setCursor(0,1); // 커서 설정
-      lcd.print("Evening");
-      
-      IRsend(TurnOff); // 전원 Off
-      On = 0;
+      lcd.print("Evening         ");
+      if(On == 1) {
+        IRsend(TurnOff); // 전원 Off
+        On = 0;
+      }
       delay(3600000); // 1시간 후에 조도 다시 측정
       lightValue = analogRead(LightPin);
     }
