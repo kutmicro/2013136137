@@ -2,33 +2,30 @@
 // Select the pin used on LCD
 LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 
-#define btnRIGHT  0
-#define btnUP     1
-#define btnDOWN   2
-#define btnLEFT   3
-#define btnSELECT 4
-#define btnNONE   5
-
-int lcd_key     = 0;
-int adc_key_in  = 0;
-int SettingComplete = 0; // 초기 세팅제어
+#define btnRIGHT  0 // 증가 →
+#define btnUP     1 // MAX설정 ↑
+#define btnDOWN   2 // MIN설정 ↓
+#define btnLEFT   3 // 감소 ←
+#define btnSELECT 4 // 세팅완료
+#define btnNONE   5 // 입력 X
 
 float MAX_Temp = 28.0; // AC가 켜지는 온도
 float MIN_Temp = 23.0; // AC가 꺼지는 온도
-float Select = 0; // 설정시 MAX or MIN 선택
+float Select = 0; // MAX or MIN 선택(MAX → 0 , MIN → 1)
+int SettingComplete = 0; // 초기 세팅제어
 
 int IRledPin = 40; // IR LED 디지털핀 40
 int TempPin = A10; // 온도센서 아날로그핀 10
 int LightPin = A15; // 조도센서 아날로그핀 15
 int On = 0; // 초기 AC의 전원은 Off로 설정
 
-int TurnOn[] = {4588,-4352,648,-1580,600,-484,600,-512,560,-520,588,-516,588,-520,564,-520,588,-516,564,-548,556,-1660,564,-520,576,-520,560,-1656,592,-1632,580,-1628,592,-1632,580,-1660,552,-1664,552,-532,576,-520,560,-18796,4520,-4412,572,-1624,592,-520,564,-520,588,-516,556,-548,564,-520,592,-520,564,-516,584,-520,588,-1632,588,-512,568,-516,596,-1652,564,-1648,564,-1648,560,-1656,564,-1652,596,-1620,592,-520,564,-520,584,0};
-int TurnOff[] = {4588,-4352,648,-1580,600,-484,600,-512,560,-520,588,-516,588,-520,564,-520,588,-516,564,-548,556,-1660,564,-520,576,-520,560,-1656,592,-1632,580,-1628,592,-1632,580,-1660,552,-1664,552,-532,576,-520,560,-18796,4520,-4412,572,-1624,592,-520,564,-520,588,-516,556,-548,564,-520,592,-520,564,-516,584,-520,588,-1632,588,-512,568,-516,596,-1652,564,-1648,564,-1648,560,-1656,564,-1652,596,-1620,592,-520,564,-520,584,0};
-int TempUp[]  = {4696,-4212,792,-1424,752,-344,728,-384,676,-412,684,-424,680,-436,636,-456,632,-476,588,-532,560,-1648,564,-520,580,-528,556,-1660,580,-1632,588,-1624,600,-1624,584,-1648,564,-1648,564,-520,588,-524,552,-18808,4520,-4412,572,-1620,584,-512,568,-516,600,-512,560,-548,564,-520,588,-512,564,-520,592,-508,592,-1632,580,-520,560,-520,588,-1656,572,-1644,568,-1652,564,-1648,564,-1648,600,-1612,600,-512,568,-512,588,0};
-int TempDown[] = {4592,-4336,664,-1556,616,-464,624,-492,568,-520,592,-520,592,-520,552,-520,592,-520,560,-552,560,-1656,572,-512,588,-512,568,-1652,592,-1628,584,-1628,588,-1616,596,-1652,552,-1672,564,-508,592,-520,564,-18784,4540,-4404,580,-1612,592,-516,564,-520,584,-528,564,-540,560,-520,592,-520,564,-520,588,-524,580,-1628,592,-520,564,-520,592,-1648,572,-1640,572,-1644,568,-1652,564,-1648,592,-1620,592,-516,560,-524,588,0};
+int TurnOn[]   = {8996,-4456,604,-500,604,-492,612,-1596,612,-1592,612,-1596,612,-492,612,-1592,612,-1596,612,-496,612,-1588,620,-1588,620,-1588,620,-484,620,-488,612,-1596,620,-1588,612,-1592,620,-1584,612,-492,616,-496,608,-496,624,-488,616,-496,616,-496,620,-484,608,-492,616,-1592,608,-1592,620,-1592,620,-1588,620,-1588,612,-1596,616,0};
+int TurnOff[]  = {8992,-4448,616,-496,608,-504,612,-1596,616,-1588,624,-1588,616,-496,616,-1596,616,-1596,608,-504,616,-1588,624,-1588,612,-1592,616,-492,616,-496,616,-1588,616,-1596,616,-1596,612,-1596,608,-492,616,-492,616,-496,616,-492,612,-492,612,-484,620,-488,624,-488,616,-1588,616,-1596,616,-1588,624,-1588,616,-1596,612,-1596,604,0};
+int TempUp[]   = {8992,-4452,620,-488,612,-492,612,-1592,612,-1592,608,-1596,616,-496,620,-1588,612,-1588,616,-496,616,-1596,616,-1596,616,-1588,616,-496,616,-496,608,-1596,612,-1596,608,-1584,612,-492,612,-1592,620,-488,616,-1588,620,-488,624,-488,616,-492,612,-492,620,-1588,612,-492,608,-1592,620,-488,616,-1596,604,-1596,604,-1596,612,0};
+int TempDown[] = {9000,-4448,612,-492,624,-488,612,-1596,612,-1588,624,-1588,620,-488,620,-1588,616,-1596,620,-484,620,-1588,620,-1588,620,-1584,612,-492,616,-492,616,-1596,616,-1596,612,-1596,612,-484,612,-492,620,-1588,624,-1588,616,-496,616,-496,608,-504,612,-496,604,-1596,616,-1596,624,-484,612,-492,620,-1588,612,-1596,612,-1596,612,0};
 
-int Read_LCD_Buttons();
-void IRsend(int IRsignal[]);
+int Read_LCD_Buttons(); // 버튼입력
+void IRsend(int IRsignal[]); // 적외선 송신
 
 void setup() {
   Serial.begin(9600); // 시리얼 통신속도 설정
@@ -49,9 +46,8 @@ void loop() {
   lcd.print("MINTemp : ");
   lcd.print(MIN_Temp, 1);
 
-  lcd_key = Read_LCD_Buttons(); // 버튼 입력
-  switch (lcd_key) {
-  case btnRIGHT: {
+  switch ( Read_LCD_Buttons() ) { // 버튼 입력
+  case btnRIGHT: { // 증가 →
     if (Select == 0)
       MAX_Temp += 0.1;
     else
@@ -59,7 +55,7 @@ void loop() {
     delay(100);
     break;
     }
-  case btnLEFT: {
+  case btnLEFT: { // 감소 ←
     if (Select == 0)
       MAX_Temp -= 0.1;
     else
@@ -67,7 +63,7 @@ void loop() {
     delay(100);
     break;
     }
-  case btnUP: {
+  case btnUP: { // MAX설정 ↑
     Select = 0;
     lcd.setCursor(14,0);
     lcd.print("<<");
@@ -75,7 +71,7 @@ void loop() {
     lcd.print("  ");
     break;
     }
-  case btnDOWN: {
+  case btnDOWN: { // MIN설정 ↓
     Select = 1;
     lcd.setCursor(14,1);
     lcd.print("<<");
@@ -83,9 +79,9 @@ void loop() {
     lcd.print("  ");
     break;
     }
-  case btnSELECT: {
+  case btnSELECT: { // 세팅완료버튼
     lcd.clear(); // lcd의 모든내용 삭제
-    SettingComplete = 1; // 세팅 완료
+    SettingComplete = 1; // 세팅완료
     lcd.setCursor(0,0);
     lcd.print("  Setting");
     lcd.setCursor(0,1);
@@ -94,7 +90,7 @@ void loop() {
     lcd.clear(); // lcd의 모든내용 삭제
     break;
     }
-  case btnNONE: {
+  case btnNONE: { // 입력 X
     break;
     }
   }
@@ -128,6 +124,13 @@ void loop() {
         temperature=(sensorValue/1023)*5*100; // 온도 센서값(0 ~ 1023) 섭씨온도로 변환
         lightValue = analogRead(LightPin);  // 조도 센서값 읽어옴
 
+        lcd.setCursor(0,0); // 커서 설정
+        lcd.print("  Temp : ");
+        lcd.print(temperature,1);
+        lcd.setCursor(0,1); // 커서 설정
+        lcd.print(" Light : ");
+        lcd.print(lightValue);
+
         if (lightValue > 360){ // 낮 → 초저녁
           break;
         }
@@ -136,6 +139,8 @@ void loop() {
           IRsend(TurnOn); // 전원 On
           On = 1;
           Serial.println("AC is on now. Waiting 5 minutes for the room to cool down...");
+          lcd.setCursor(0,1); // 커서 설정
+          lcd.print("Hot!! Turn On AC");
           delay(300000);  // 5분 대기
         }
         else if (temperature < MIN_Temp){
@@ -143,6 +148,8 @@ void loop() {
           Serial.println(temperature,1);
           IRsend(TurnOff); // 전원 Off
           On = 0;
+          lcd.setCursor(0,1); // 커서 설정
+          lcd.print("Turn Off AC");
           delay(900000); // 15분 후에 온도, 조도 다시 측정
         }
         else {
@@ -158,23 +165,36 @@ void loop() {
         temperature=(sensorValue/1023)*5*100; // 온도 센서값(0 ~ 1023) 섭씨온도로 변환
         lightValue = analogRead(LightPin);  // 조도 센서값 읽어옴
 
+        lcd.setCursor(0,0); // 커서 설정
+        lcd.print("  Temp : ");
+        lcd.print(temperature,1);
+        lcd.setCursor(0,1); // 커서 설정
+        lcd.print(" Light : ");
+        lcd.print(lightValue);
+
         if (lightValue > 360){ // 낮 → 초저녁
           break;
         }
         else if (temperature < MIN_Temp+1 && temperature > MIN_Temp){ // 23.X ℃
           Serial.println("Too cold! Increasing Temperature");
           IRsend(TempUp);
+          lcd.setCursor(0,1); // 커서 설정
+          lcd.print("Cold!! Temp Up");
           delay(300000); // 5분 대기
         }
         else if (temperature > MAX_Temp){
           Serial.println("Hoooot! Decreasing Temperature");
           IRsend(TempDown);
+          lcd.setCursor(0,1); // 커서 설정
+          lcd.print("Hot!! Temp Down");
           delay(300000); // 5분 대기
         }
         else if (temperature < MIN_Temp){
           Serial.println("Too Cold in here. Turning off AC");
           IRsend(TurnOff); // 전원 Off
           On = 0;
+          lcd.setCursor(0,1); // 커서 설정
+          lcd.print("TooCold Turn Off");
           delay(600000); // 10분 대기
         }
         else {
@@ -188,6 +208,11 @@ void loop() {
     else if (lightValue > 360 && lightValue < 700){ // 초저녁이나 이른 아침
       Serial.print("It is too dark to turn on AC right now. Current ambient light level is:");
       Serial.println(lightValue);
+      lcd.setCursor(0,0); // 커서 설정
+      lcd.print("AC is Off");
+      lcd.setCursor(0,1); // 커서 설정
+      lcd.print("Early Evening");
+      
       IRsend(TurnOff); // 전원 Off
       On = 0;
       delay(900000); // 15분 후에 조도 다시 측정
@@ -197,6 +222,11 @@ void loop() {
     else { // 한밤중
       Serial.print("It is too dark to turn on AC right now. Current ambient light level is:");
       Serial.println(lightValue);
+      lcd.setCursor(0,0); // 커서 설정
+      lcd.print("AC is Off");
+      lcd.setCursor(0,1); // 커서 설정
+      lcd.print("Evening");
+      
       IRsend(TurnOff); // 전원 Off
       On = 0;
       delay(3600000); // 1시간 후에 조도 다시 측정
@@ -206,7 +236,7 @@ void loop() {
 }
 
 int Read_LCD_Buttons() { // 버튼 입력
-  adc_key_in = analogRead(A0); // read analog A0 value 
+  int adc_key_in = analogRead(A0); // read analog A0 value 
   // when read the 5 key values in the vicinity of the following：0,144,329,504,741
   // By setting different threshold, you can read the one button
   if (adc_key_in > 1000) return btnNONE;
@@ -219,6 +249,7 @@ int Read_LCD_Buttons() { // 버튼 입력
   return btnNONE; 
 }
 
+// 데이터를 38kHz로 변조하여 적외선 신호로 송신
 void IRsend(int IRsignal[]) {
   int i=0;
   do {
